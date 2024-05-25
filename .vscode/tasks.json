@@ -1,0 +1,51 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build Docker Image",
+            "type": "shell",
+            "command": "docker build . --rm -f linux.Dockerfile -t apfelwurm/xgpro-docker --no-cache --build-arg BUILDNODE=$env:computername;",
+            "group": "build",
+            "problemMatcher": [],
+            "promptOnClose": true
+        },
+        {
+            "label": "Build & Run Interactive",
+            "type": "shell",
+            "command": "docker run --rm --privileged -v $PWD:/currdir -v /dev/bus/usb:/dev/bus/usb -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY=$DISPLAY apfelwurm/xgpro-docker;",
+            "dependsOn": "Build Docker Image",
+            "group": "build",
+            "problemMatcher": [],
+            "promptOnClose": true
+        },
+        {
+            "label": "Build & Shell In",
+            "type": "shell",
+            "command": "docker run -it --rm --privileged -v $PWD:/currdir -v /dev/bus/usb:/dev/bus/usb -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY=$DISPLAY apfelwurm/xgpro-docker /bin/bash;",
+            "dependsOn": "Build Docker Image",
+            "group": "build",
+            "problemMatcher": [],
+            "promptOnClose": true
+        },
+        {
+            "label": "Build & Run Interactive root",
+            "type": "shell",
+            "command": "docker run --rm -u 0 --privileged -v $PWD:/currdir -v /dev/bus/usb:/dev/bus/usb -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY=$DISPLAY apfelwurm/xgpro-docker;",
+            "dependsOn": "Build Docker Image",
+            "group": "build",
+            "problemMatcher": [],
+            "promptOnClose": true
+        },
+        {
+            "label": "Build & Shell In root",
+            "type": "shell",
+            "command": "docker run -it --rm -u 0 --privileged -v $PWD:/currdir -v /dev/bus/usb:/dev/bus/usb -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY=$DISPLAY apfelwurm/xgpro-docker /bin/bash;",
+            "dependsOn": "Build Docker Image",
+            "group": "build",
+            "problemMatcher": [],
+            "promptOnClose": true
+        }
+    ]
+}

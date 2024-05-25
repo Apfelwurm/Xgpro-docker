@@ -1,0 +1,11 @@
+version: '3'
+services:
+    xgpro:
+        image: 'apfelwurm/xgpro-docker:latest'
+        privileged: true
+        environment:
+            DISPLAY: ${DISPLAY}
+        volumes:
+            - /dev/bus/usb:/dev/bus/usb
+            - ${PWD}:/currdir
+            - /tmp/.X11-unix:/tmp/.X11-unix
