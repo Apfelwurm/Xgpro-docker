@@ -34,5 +34,5 @@ wine libusb-1.0-0:i386 &&`
 RUN useradd --user-group --system --create-home --no-log-init xgpro
 
 COPY --chown=xgpro:xgpro --from=builder /xgprosrc /app/xgpro
-
-CMD [ "wine" "/app/xgpro/Xgpro.exe" ]
+USER xgpro
+CMD [ "/bin/bash" "-c" "wine" "/app/xgpro/Xgpro.exe" ]
