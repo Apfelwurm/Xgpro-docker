@@ -35,4 +35,4 @@ RUN useradd --user-group --system --create-home --no-log-init xgpro
 
 COPY --chown=xgpro:xgpro --from=builder /xgprosrc /app/xgpro
 USER xgpro
-CMD [ "/bin/bash" "-c" "wine" "/app/xgpro/Xgpro.exe" ]
+CMD "wine /app/xgpro/Xgpro.exe"
