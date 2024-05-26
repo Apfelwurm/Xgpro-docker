@@ -10,11 +10,16 @@ RUN unrar xgproV${FULL_VERSION}_setup.rar
 RUN mkdir /xgprosrc
 RUN unrar XgproV${FULL_VERSION}_Setup.exe /xgprosrc
 RUN wget https://github.com/radiomanV/TL866/raw/master/wine/setupapi.dll && mv setupapi.dll /xgprosrc/setupapi.dll
+RUN mkdir /udevrules
+RUN wget https://raw.githubusercontent.com/radiomanV/TL866/master/udev/60-minipro.rules  && mv 60-minipro.rules /udevrules/60-minipro.rules
+RUN wget https://raw.githubusercontent.com/radiomanV/TL866/master/udev/61-minipro-plugdev.rules  && mv 61-minipro-plugdev.rules /udevrules/61-minipro-plugdev.rules
+RUN wget https://raw.githubusercontent.com/radiomanV/TL866/master/udev/61-minipro-uaccess.rules  && mv 61-minipro-uaccess.rules /udevrules/61-minipro-uaccess.rules
 
 FROM debian:12
 HEALTHCHECK NONE
 ARG BUILDNODE=unspecified
 ARG SOURCE_COMMIT=unspecified
+ENV ROOT=FALSE
 
 LABEL com.lacledeslan.build-node=$BUILDNODE `
       org.label-schema.schema-version="1.0" `
@@ -27,12 +32,14 @@ LABEL com.lacledeslan.build-node=$BUILDNODE `
 RUN dpkg --add-architecture i386
 
 RUN apt-get update && apt-get install -y `
-wine libusb-1.0-0:i386 &&`
+wine libusb-1.0-0:i386 udev &&`
     apt-get clean &&`
     rm -rf /tmp/* /var/lib/apt/lists/* /var/tmp/*;
 
 RUN useradd --user-group --system --create-home --no-log-init xgpro
-
+RUN usermod -aG plugdev xgpro
 COPY --chown=xgpro:xgpro --from=builder /xgprosrc /app/xgpro
-USER xgpro
-CMD ["/bin/bash", "-c", "wine /app/xgpro/Xgpro.exe"]
+COPY --from=builder /udevrules/ /etc/udev/rules.d/
+COPY dist/start.sh /app/start.sh
+RUN chmod +x /app/start.sh
+CMD ["/bin/bash", "-c", "/app/start.sh"]

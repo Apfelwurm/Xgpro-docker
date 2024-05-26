@@ -10,6 +10,14 @@
             "group": "build",
             "problemMatcher": [],
             "promptOnClose": true
+        },        
+        {
+            "label": "Build Docker Image cached",
+            "type": "shell",
+            "command": "docker build . --rm -f linux.Dockerfile -t apfelwurm/xgpro-docker --build-arg BUILDNODE=$env:computername;",
+            "group": "build",
+            "problemMatcher": [],
+            "promptOnClose": true
         },
         {
             "label": "Build & Run Interactive",
@@ -32,7 +40,7 @@
         {
             "label": "Build & Run Interactive root",
             "type": "shell",
-            "command": "docker run --rm -u 0 --privileged -v $PWD:/currdir -v /dev/bus/usb:/dev/bus/usb -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY=$DISPLAY apfelwurm/xgpro-docker;",
+            "command": "docker run --rm --privileged -v $PWD:/currdir -v /dev/bus/usb:/dev/bus/usb -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY=$DISPLAY -e ROOT=TRUE apfelwurm/xgpro-docker;",
             "dependsOn": "Build Docker Image",
             "group": "build",
             "problemMatcher": [],
@@ -41,7 +49,7 @@
         {
             "label": "Build & Shell In root",
             "type": "shell",
-            "command": "docker run -it --rm -u 0 --privileged -v $PWD:/currdir -v /dev/bus/usb:/dev/bus/usb -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY=$DISPLAY apfelwurm/xgpro-docker /bin/bash;",
+            "command": "docker run -it --rm -u 0 --privileged -v $PWD:/currdir -v /dev/bus/usb:/dev/bus/usb -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY=$DISPLAY -e ROOT=TRUE apfelwurm/xgpro-docker /bin/bash;",
             "dependsOn": "Build Docker Image",
             "group": "build",
             "problemMatcher": [],
